@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Floppy Bird</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="game-card">
+        <header class="game-header">
+          <div>
+            <p class="eyebrow">Browser Arcade</p>
+            <h1>Floppy Bird</h1>
+          </div>
+          <div class="score-pill">Score <span id="score">0</span></div>
+          <div class="score-pill high-score">Best <span id="highScore">0</span></div>
+        </header>
+
+        <canvas id="gameCanvas" width="640" height="400"></canvas>
+
+        <div class="controls">
+          <p>Press Space, click, or tap to flap.</p>
+          <button id="restartBtn" type="button">Restart Game</button>
+        </div>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
