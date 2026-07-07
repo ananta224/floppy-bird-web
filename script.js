@@ -31,6 +31,33 @@ let time;
 let isRunning;
 let highScore = Number(localStorage.getItem('floppyBirdHighScore') || 0);
 
+function getDifficultySettings() {
+  let gapMultiplier = 1;
+  let speedMultiplier = 1;
+
+  if (score >= 80) {
+    gapMultiplier = 0.65;
+    speedMultiplier = 1.35;
+  } else if (score >= 70) {
+    gapMultiplier = 0.70;
+    speedMultiplier = 1.28;
+  } else if (score >= 50) {
+    gapMultiplier = 0.78;
+    speedMultiplier = 1.18;
+  } else if (score >= 30) {
+    gapMultiplier = 0.85;
+    speedMultiplier = 1.10;
+  } else if (score >= 20) {
+    gapMultiplier = 0.90;
+    speedMultiplier = 1.05;
+  }
+
+  return {
+    gap: PIPE_GAP * gapMultiplier,
+    speed: PIPE_SPEED * speedMultiplier,
+  };
+}
+
 function stopLoop() {
   isRunning = false;
   if (animationFrameId) {
@@ -85,13 +112,14 @@ function resetGame() {
 }
 
 function spawnPipe() {
+  const difficulty = getDifficultySettings();
   const minY = 85;
-  const maxY = HEIGHT - GROUND_HEIGHT - PIPE_GAP - 85;
+  const maxY = HEIGHT - GROUND_HEIGHT - difficulty.gap - 85;
   const topHeight = minY + Math.random() * (maxY - minY);
   pipes.push({
     x: WIDTH + 40,
     topHeight,
-    bottomY: topHeight + PIPE_GAP,
+    bottomY: topHeight + difficulty.gap,
     scored: false,
   });
 }
@@ -151,6 +179,8 @@ function update(dt) {
     bird.angle = Math.max(-0.55, Math.min(0.75, bird.velocity / 900));
     bird.wingPhase = Math.sin(time * 16) * 0.75;
 
+    const difficulty = getDifficultySettings();
+
     if (bird.y + bird.radius >= HEIGHT - GROUND_HEIGHT) {
       bird.y = HEIGHT - GROUND_HEIGHT - bird.radius;
       bird.velocity = 0;
@@ -171,7 +201,7 @@ function update(dt) {
 
     for (let i = pipes.length - 1; i >= 0; i -= 1) {
       const pipe = pipes[i];
-      pipe.x -= PIPE_SPEED * dt;
+      pipe.x -= difficulty.speed * dt;
 
       const passedPipe = bird.x > pipe.x + PIPE_WIDTH && !pipe.scored;
       if (passedPipe) {
